@@ -2,13 +2,15 @@
 import Vue from 'vue'
 // 引入Vue-Router
 import VueRouter from 'vue-router'
+import Login from '@/views/login'
 
 Vue.use(VueRouter)
 
 const router = new VueRouter({
-  routes: []
+  routes: [
+    { path: '/', name: 'home', redirect: '/login' },
+    { path: '/login', name: 'login', component: Login }
+  ]
 })
 
-export default {
-  router
-}
+export default router
