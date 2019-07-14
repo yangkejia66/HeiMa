@@ -5,6 +5,8 @@ import VueRouter from 'vue-router'
 import Login from '@/views/login'
 import Home from '@/views/home'
 import Welcome from '@/views/welcome'
+import NotFound from '@/views/404'
+import Content from '@/views/content'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -13,13 +15,19 @@ const router = new VueRouter({
     { path: '/login', name: 'login', component: Login },
     {
       path: '/home',
-      name: 'home',
       component: Home,
       children: [
-        { path: '/home', name: Welcome, component: Welcome }
+        { path: '/home', name: 'home', component: Welcome },
+        { path: '/content', name: 'content', component: Content }
       ]
-    }
+    },
+    { path: '*', name: 404, component: NotFound }
   ]
+})
+router.beforeEach((to, from, next) => {
+  const user = window.sessionStorage.getItem('heima-it')
+  if (to.path !== '/login' && !user) return next('/login')
+  next()
 })
 
 export default router

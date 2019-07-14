@@ -14,7 +14,7 @@
         <el-link class="login-link" :underline="false" type="primary">用户协议</el-link>和
         <el-link class="login-link" :underline="false" type="primary">隐私政策</el-link>
         <el-form-item>
-          <el-button class="login-Up" style="width:100%" type="primary" @click="login()">立即创建</el-button>
+          <el-button class="login-Up" style="width:100%" type="primary" @click="login()">立即登录</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { async } from 'q'
 export default {
   data () {
     const checkPhone = (rule, value, callback) => {
@@ -54,21 +55,38 @@ export default {
   },
   methods: {
     login () {
-      this.$refs.loginForm.validate(valid => {
+      // this.$refs.loginForm.validate(valid => {
+      //   if (valid) {
+      //     this.axios({
+      //       method: 'post',
+      //       url: 'http://ttapi.research.itcast.cn/mp/v1_0/authorizations',
+      //       data: this.loginForm
+      //     }).then(res => {
+      //       this.$message({
+      //         message: '登陆成功',
+      //         type: 'success'
+      //       })
+      //       window.sessionStorage.setItem('heima-it', JSON.stringify(res.data.data))
+      //       this.$router.push({ name: 'home' })
+      //     }).catch(() => {
+      //       this.$message.error('用户名或密码')
+      //     })
+      //   }
+      // })
+      this.$refs.loginForm.validate(async valid => {
         if (valid) {
-          this.axios({
-            method: 'post',
-            url: 'http://ttapi.research.itcast.cn/mp/v1_0/authorizations',
-            data: this.loginForm
-          }).then(res => {
+          // try {业务逻辑}catch（）{业务逻辑失败调用catche 进行错误处理}
+          try {
             this.$message({
               message: '登陆成功',
               type: 'success'
             })
+            const res = await this.axios.post('authorizations', this.loginForm)
+            window.sessionStorage.setItem('heima-it', JSON.stringify(res.data.data))
             this.$router.push({ name: 'home' })
-          }).catch(() => {
+          } catch (error) {
             this.$message.error('用户名或密码')
-          })
+          }
         }
       })
     }
